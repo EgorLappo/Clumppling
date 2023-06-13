@@ -5,6 +5,8 @@ description = "Clumppling: a new method for aligning multiple clustering results
 authors = ["Xiran Liu <xiranliu@stanford.edu>"]
 license = "MIT License"
 readme = "README.md"
+keywords = ["alignment", "clustering"]
+classifiers = ["License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
