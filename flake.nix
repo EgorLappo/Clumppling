@@ -17,12 +17,15 @@
       in
       {
         packages = {
-          myapp = mkPoetryApplication { projectDir = self; };
+          myapp = mkPoetryApplication {
+            projectDir = self;
+            propagatedBuildInputs = with pkgs; [ cmake glpk ];
+          };
           default = self.packages.${system}.myapp;
         };
 
         devShells.default = pkgs.mkShell {
-          packages = [ poetry2nix.packages.${system}.poetry ];
+          packages = [ poetry2nix.packages.${system}.poetry cmake glpk ];
         };
       });
 }
