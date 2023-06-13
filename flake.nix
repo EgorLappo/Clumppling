@@ -25,7 +25,7 @@
         };
 
         devShells.default = pkgs.mkShell {
-          packages = [ poetry2nix.packages.${system}.poetry cmake glpk ];
+          packages = with pkgs; [ poetry2nix.packages.${system}.poetry cmake glpk ];
         };
       });
 }
