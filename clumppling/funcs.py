@@ -555,7 +555,7 @@ def detect_modes(cost_withinK,Q_files,K_range,K2IDs,default_cd,cd_param=1.0):
 
             else: # having community structure
                 # create graph
-                G = nx.from_numpy_matrix(adj_mat)   
+                G = nx.from_numpy_array(adj_mat)   
                 G.remove_edges_from(nx.selfloop_edges(G))
                 pos = nx.spring_layout(G)
                 
