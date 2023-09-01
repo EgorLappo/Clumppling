@@ -193,9 +193,8 @@ def main(args):
 
     tot_toc = time.time()
     logging.info("======== Total Time: %.3fs ========", tot_toc-tot_tic)
-    
-    
-if __name__ == "__main__":
+
+def run():
     parser = argparse.ArgumentParser()
     parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
@@ -222,3 +221,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+if __name__ == "__main__":
+    run()
