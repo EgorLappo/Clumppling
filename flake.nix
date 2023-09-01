@@ -1,28 +1,61 @@
 {
-  description = "Clumppling";
+  description = "arizona searches by imputation";
+  nixConfig.bash-prompt = "\[az-search\]$ ";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.poetry2nix = {
-    url = "github:nix-community/poetry2nix";
-    inputs.nixpkgs.follows = "nixpkgs";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
-        inherit (poetry2nix.legacyPackages.${system}) mkPoetryApplication;
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        packages = {
-          myapp = mkPoetryApplication { projectDir = self; };
-          default = self.packages.${system}.myapp;
+    let
+      pkgs = (import nixpkgs) {
+          inherit system;
+        };
+      pypkgs = pkgs.python311.pkgs;
+
+      tw = pypkgs.buildPythonPackage {
+        pname = "TracyWidom";
+        version = "0.3.0";
+        src = pypkgs.fetchPypi {
+          pname = "TracyWidom";
+          version = "0.3.0";
+          sha256 = "1425fe9ad5764280ada7825037f30b5928f71a13265e32cea6c0d7c27cbc0a10";
         };
 
-        devShells.default = pkgs.mkShell {
-          packages = [ poetry2nix.packages.${system}.poetry ];
-        };
-      });
+        propagatedBuildInputs = with pypkgs; [
+          numpy scipy
+        ];
+      };
+      
+      clumppling = pypkgs.buildPythonPackage {
+        format = "pyproject";
+        pname = "clumppling";
+        version = "0.1.0";
+        src = ./.;
+
+        propagatedBuildInputs = with pypkgs; [ 
+          setuptools 
+          poetry-core 
+          numpy 
+          scipy
+          pandas
+          matplotlib
+          networkx
+          python-louvain
+          tw
+          
+          cvxpy
+          pkgs.lapack
+          pkgs.blas
+          pkgs.gcc-unwrapped
+          pkgs.glpk
+        ];
+      };
+    in 
+    rec {
+      packages.default = clumppling;
+    }
+  );
 }
