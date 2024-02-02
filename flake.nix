@@ -1,7 +1,4 @@
 {
-  description = "arizona searches by imputation";
-  nixConfig.bash-prompt = "\[az-search\]$ ";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
     flake-utils.url = "github:numtide/flake-utils";
